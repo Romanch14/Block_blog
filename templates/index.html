@@ -1,0 +1,42 @@
+{% extends 'base.html' %} {% block content %}
+{% if current_user.is_authenticated %}
+<h2>Welcome to Block Blog, {{current_user.username}}! <span class="wave">👋🏾</span></h2>
+{% else %}
+<h2>Welcome to Block Blog! <span class="wave"></span></h2>
+{% endif %}
+{% if articles %}
+
+<!-- Renders a list of articles by designing a loop that list articles
+and display a preview for each articles.
+A clickable link (Read more) at the end of the preview text helps to read the full article
+contents. Also the title, the author, the date posted are placed before the contents.-->
+
+      {% for article in articles %}
+      
+       <div class="post-preview">
+        <a href="/article/{{article.id}}/">
+          <h2 class="article-tilte">
+           {{article.title}}
+         </h2>
+        </a>
+        <p class="article-meta"> posted by
+        <a href="#">{{article.author}}</a> on {{article.created_on.strftime('%d/%b/%Y')}}</p>
+    {{ article.content[0:100] }} <a href="/article/{{ article.id }}/">Read More</a></p> 
+       </div>
+      {% endfor %}
+<br>
+{% if current_user.is_authenticated %}
+<p><a href="{{url_for('contribute')}}" class="button">Contribute</a></p>
+{% else %}
+<p>Fancy sharing your thoughts with block Blog? <a href="{{url_for('login')}}">Log In</a> to join us 🤗</p>
+{% endif %}
+{% else %}
+<p>
+  No articles have been uploaded yet.
+  {% if current_user.is_authenticated %}
+  <a href="{{url_for('contribute')}}">Create One</a>
+  {% else %}
+  <a href="{{url_for('login')}}">Log In</a> to create one
+  {% endif %}
+</p>
+{% endif %} {% endblock content %}
